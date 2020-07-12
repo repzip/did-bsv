@@ -1,0 +1,46 @@
+{
+  "@context": [
+    "https://schema.org/",
+    "https://w3id.org/security/v1",
+    "https://w3id.org/did/v1"
+  ],
+  "didDocument": { 
+    "publicKey": [
+      {
+        "id": "did:bsv:02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71",
+        "type": "EcdsaSecp256k1"
+      }
+    ],
+    "authentication": [
+      {
+        "type": "EcdsaSecp256k1",
+        "publicKey": "did:bsv:02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71"
+      }
+    ]
+  },
+  "id": "did:bsv:02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71/0#christophera-self-signed-claim",
+  "type": [
+    "Credential",
+    "Identity",
+    "Person"
+  ],
+  "issuer": "did:bsv:xyv2-xzyq-qqm5-tyke/0#did-transaction-key",
+  "issued": "2017-07-15",
+  "label": "christophera-self-signed-claim",
+  "claim": {
+    "relationship": "me",
+    "alternate-name": "ChristopherA",
+    "sameAs": [
+      "https://identity.law/02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71",
+      "https://raw.githubusercontent.com/ChristopherA/self/master/FDA6C78E.asc",
+      "https://github.com/christophera",
+      "https://twitter.com/christophera"
+    ]
+  },
+  "signature": {
+    "type": "EcdsaSecp256k1",
+    "created": "2017-07-16T00:48:44Z",
+    "creator": "did:bsv:02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71",
+    "signatureValue": "HyV/c/DFdAigxSAuqE9O6yRqUk5wpobUaj63ig3hZMZxKJ/l2lNduWFKsN6aR5twAFurD3pJx2ZgVpu/fRb/lLo="
+  }
+}

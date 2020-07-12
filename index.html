@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>BTCR DID Method</title>
+  <title>BSV DID Method</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -1402,17 +1402,14 @@ pre .property::before, pre .property::after {
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">BTCR DID Method</h1>
+   <h1 class="p-name no-ref" id="title">BSV DID Method</h1>
    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-08-08">8 August 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/w3c-ccg/didm-btcr/issues/">GitHub</a>
+     <dd><a href="https://github.com/repzip/did-BSV/issues/">GitHub</a>
      <dt class="editor">Editors:
-     <dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="http://www.lifewithalacrity.com/">Christopher Allen</a>
-     <dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="https://github.com/kimdhamilton">Kim Hamilton Duffy</a>
-     <dd class="editor p-author h-card vcard"><span class="p-name fn">Ryan Grant</span>
-     <dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="https://github.com/danpape">Dan Pape</a>
+     <dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="http://www.repzip.com/">Will Devine</a>
      <dd class="editor p-author h-card vcard"><span class="p-name fn"></span>
     </dl>
    </div>
@@ -1427,7 +1424,7 @@ Parts of this work may be from another specification document.  If so, those par
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The Bitcoin Reference DID method specification conforms to the requirements specified in the <a href="https://w3c-ccg.github.io/did-spec/">DID specification</a> currently published by the W3C Credentials Community Group. For more information about DIDs and DID method specifications, please see the <a href="https://github.com/WebOfTrustInfo/rwot7/blob/master/topics-and-advance-readings/did-primer.md">DID Primer</a>.</p>
+   <p>The BitcoinSV Reference DID method specification conforms to the requirements specified in the <a href="https://w3c-ccg.github.io/did-spec/">DID specification</a> currently published by the W3C Credentials Community Group. For more information about DIDs and DID method specifications, please see the <a href="https://github.com/WebOfTrustInfo/rwot7/blob/master/topics-and-advance-readings/did-primer.md">DID Primer</a>.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <nav data-fill-with="table-of-contents" id="toc">
@@ -1439,8 +1436,8 @@ Parts of this work may be from another specification document.  If so, those par
      <a href="#concepts"><span class="secno">3</span> <span class="content">Basic Concepts</span></a>
      <ol class="toc">
       <li><a href="#txref"><span class="secno">3.1</span> <span class="content">Txref</span></a>
-      <li><a href="#format"><span class="secno">3.2</span> <span class="content">BTCR DID Format</span></a>
-      <li><a href="#btcr_construction"><span class="secno">3.3</span> <span class="content">BTCR DID construction</span></a>
+      <li><a href="#format"><span class="secno">3.2</span> <span class="content">BSV DID Format</span></a>
+      <li><a href="#BSV_construction"><span class="secno">3.3</span> <span class="content">BSV DID construction</span></a>
       <li><a href="#default_cap"><span class="secno">3.4</span> <span class="content">Default Capabilities</span></a>
       <li><a href="#continuation"><span class="secno">3.5</span> <span class="content">Continuation DID Documents</span></a>
       <li><a href="#following"><span class="secno">3.6</span> <span class="content">Following the tip</span></a>
@@ -1491,25 +1488,25 @@ Parts of this work may be from another specification document.  If so, those par
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
-   <p>The Bitcoin Reference DID method (did:btcr) supports DIDs on the public
-Bitcoin <a data-link-type="dfn" href="#blockchain" id="ref-for-blockchain">blockchain</a>. The Bitcoin Reference method has minimal design
-goals: a DID trust anchor based on the Bitcoin blockchain, updates
-publicly visible and auditable via Bitcoin transactions, and optionally,
+   <p>The BitcoinSV Reference DID method (did:bsv) supports DIDs on the public
+BitcoinSV <a data-link-type="dfn" href="#blockchain" id="ref-for-blockchain">blockchain</a>. The BitcoinSV Reference method has minimal design
+goals: a DID trust anchor based on the BitcoinSV blockchain, updates
+publicly visible and auditable via BitcoinSV transactions, and optionally,
 additional DID Document information referenced in the transaction
 OP_RETURN data field. No other Personal Identifiable Information (PII)
 would be placed on the immutable blockchain.</p>
-   <p>A secondary intent of the BTCR method is to serve as a very
+   <p>A secondary intent of the BSV method is to serve as a very
 conservative, very secure example and some best practices for creating a
-DID method. The use cases for BTCR are focused on anonymous and
+DID method. The use cases for BSV are focused on anonymous and
 pseudo-anonymous identities, web-of-trust style webs of identity, and
 absolute mimimal personal information disclosure. Other DID methods will
 likely need to loosen these standards.</p>
-   <p>Some aspects of the BTCR method will not be practical if inappropriately
+   <p>Some aspects of the BSV method will not be practical if inappropriately
 scaled — for instance, there is a transaction cost to update keys and
 DDO object, potential UTXO inflation (i.e. one additional unspent output
-for every BTCR-based identity), and even if segwit isn’t used it could
-cause blockchain bloat. However, identities using the BTCR method can be
-a strong as Bitcoin itself -- currently securing billions of dollars of
+for every BSV-based identity), and even if segwit isn’t used it could
+cause blockchain bloat. However, identities using the BSV method can be
+a strong as BitcoinSV itself -- currently securing billions of dollars of
 digital value.</p>
    <h2 class="heading settled" data-level="2" id="terminology"><span class="secno">2. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h2>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="block">block</dfn>: A data structure that contains one or more <a data-link-type="dfn" href="#ledger" id="ref-for-ledger">ledger</a> events.</p>
@@ -1518,7 +1515,7 @@ where the ordering of the blocks can be mathematically proven to be
 correct.</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consensus-algorithm">consensus algorithm</dfn>: An algorithm that enables multiple nodes
 in a network to make a decision in a deterministic fashion.</p>
-   <p><dfn data-dfn-type="dfn" data-noexport id="continuation-did-document">continuation <a data-link-type="dfn" href="#did" id="ref-for-did">DID</a> document<a class="self-link" href="#continuation-did-document"></a></dfn>: A continuation <a data-link-type="dfn" href="#did" id="ref-for-did①">DID</a> document is an optional document external to the Bitcoin transaction providing
+   <p><dfn data-dfn-type="dfn" data-noexport id="continuation-did-document">continuation <a data-link-type="dfn" href="#did" id="ref-for-did">DID</a> document<a class="self-link" href="#continuation-did-document"></a></dfn>: A continuation <a data-link-type="dfn" href="#did" id="ref-for-did①">DID</a> document is an optional document external to the BitcoinSV transaction providing
 additional DID document keys, ...</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="cryptographic-ledger">cryptographic ledger</dfn>: A method of recording changes in a
 state machine where the accuracy of the ledger can be mathematically
@@ -1533,16 +1530,16 @@ should be excavated.</p>
 to consensus in a decentralized yet deterministic fashion.</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="ledger">ledger</dfn>: TODO.</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="outpoint">outpoint</dfn>: <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index">outpoint index</a>.</p>
-   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="outpoint-index">outpoint index</dfn>: A bitcoin transaction output. Also called outpoint (without index).
+   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="outpoint-index">outpoint index</dfn>: A BitcoinSV transaction output. Also called outpoint (without index).
 This terminology is chosen for consistency with <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">BIP-136</a>.</p>
    <h2 class="heading settled" data-level="3" id="concepts"><span class="secno">3. </span><span class="content">Basic Concepts</span><a class="self-link" href="#concepts"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="txref"><span class="secno">3.1. </span><span class="content">Txref</span><a class="self-link" href="#txref"></a></h3>
-   <p>BTCR identifiers use the TxRef encoding to refer to a transaction position within the Bitcoin blockchain, as described in BIP-0136, <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">Bech32 Encoded Transaction Position References</a>. A TxRef encodes the chain, blockheight, and transaction index where the transaction is located, and an optional reference to the <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index①">outpoint index</a> within the transaction.</p>
-   <p>Because the TxRef encodes the transaction’s position in the Bitcoin blockchain, that means it is only known after a transaction has been confirmed. That distinguishes it from, for example, transaction ids (hashes), which are known even before confirmation.</p>
+   <p>BSV identifiers use the TxRef encoding to refer to a transaction position within the BitcoinSV blockchain, as described in BIP-0136, <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">Bech32 Encoded Transaction Position References</a>. A TxRef encodes the chain, blockheight, and transaction index where the transaction is located, and an optional reference to the <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index①">outpoint index</a> within the transaction.</p>
+   <p>Because the TxRef encodes the transaction’s position in the BitcoinSV blockchain, that means it is only known after a transaction has been confirmed. That distinguishes it from, for example, transaction ids (hashes), which are known even before confirmation.</p>
    <p>Modifications to BIP-0136:</p>
    <ol>
     <li data-md>
-     <p>The BTCR Method Specification has chosen to elide chain-specific prefixes (e.g. tx1 or txtest1), as permitted by BIP-0136.</p>
+     <p>The BSV Method Specification has chosen to elide chain-specific prefixes (e.g. tx1 or txtest1), as permitted by BIP-0136.</p>
    </ol>
    <div class="example no-marker" id="example-60324f33">
     <a class="self-link" href="#example-60324f33"></a>
@@ -1564,22 +1561,22 @@ we want to specify the second transaction <a data-link-type="dfn" href="#outpoin
    </div>
    <ol start="2">
     <li data-md>
-     <p>The BTCR Method Specification does not allow ambiguity that arises when the transaction <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index③">outpoint index</a> is 0</p>
+     <p>The BSV Method Specification does not allow ambiguity that arises when the transaction <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index③">outpoint index</a> is 0</p>
    </ol>
-   <p>In the case where a BTCR-related transaction specifies an <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index④">outpoint index</a>, and that <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑤">outpoint index</a> is 0, the short form of the BTCR DID must be used.</p>
+   <p>In the case where a BSV-related transaction specifies an <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index④">outpoint index</a>, and that <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑤">outpoint index</a> is 0, the short form of the BSV DID must be used.</p>
    <div class="example no-marker" id="example-69554d4c">
     <a class="self-link" href="#example-69554d4c"></a>
-    <div class="marker">EXAMPLE: BTCR Transaction outpoint index 0 ambiguity example</div>
+    <div class="marker">EXAMPLE: BSV Transaction outpoint index 0 ambiguity example</div>
      For testnet transaction 
 <pre>f8cdaff3ebd9e862ed5885f8975489090595abe1470397f79780ead1c7528107</pre>
-    , if referring to outpoint index 0, the BTCR DID must be resolved as follows: 
+    , if referring to outpoint index 0, the BSV DID must be resolved as follows: 
     <p>VALID: </p>
-<pre>did:btcr:xyv2-xzpq-q9wa-p7t</pre>
+<pre>did:bsv:xyv2-xzpq-q9wa-p7t</pre>
      INVALID: 
-<pre>did:btcr:8yv2-xzpq-qqqq-9yce-nk</pre>
+<pre>did:bsv:8yv2-xzpq-qqqq-9yce-nk</pre>
     <p></p>
    </div>
-   <p>BIP136 supports both forms for index 0, but we are making the decision that BTCR supports only the short form when index==0. This is for the following reasons:</p>
+   <p>BIP136 supports both forms for index 0, but we are making the decision that BSV supports only the short form when index==0. This is for the following reasons:</p>
    <ul>
     <li data-md>
      <p>clarity for resolution implementers</p>
@@ -1587,25 +1584,25 @@ we want to specify the second transaction <a data-link-type="dfn" href="#outpoin
      <p>ambiguous id is a potential security issue</p>
    </ul>
    <p>If a DID resolver encounters the invalid form, it must reject the input as invalid.</p>
-   <h3 class="heading settled" data-level="3.2" id="format"><span class="secno">3.2. </span><span class="content">BTCR DID Format</span><a class="self-link" href="#format"></a></h3>
-   <p>BTCR DIDs have the following format:</p>
-<pre>btcr-did        = "did:btcr:" btcr-identifier
+   <h3 class="heading settled" data-level="3.2" id="format"><span class="secno">3.2. </span><span class="content">BSV DID Format</span><a class="self-link" href="#format"></a></h3>
+   <p>BSV DIDs have the following format:</p>
+<pre>BSV-did        = "did:bsv:" BSV-identifier
                  [ ";" did-service ] [ "/" did-path ]
                  [ "?" did-query ] [ "#" did-fragment ]
-btcr-identifier = TxRef encoded transaction id
+BSV-identifier = TxRef encoded transaction id
 </pre>
    <div class="example no-marker" id="example-c57b25dd">
     <a class="self-link" href="#example-c57b25dd"></a>
-    <div class="marker">EXAMPLE: BTCR DID</div>
-     A BTCR DID for txid
+    <div class="marker">EXAMPLE: BSV DID</div>
+     A BSV DID for txid
 67c0ee676221d9e0e08b98a55a8bf8add9cba854f13dda393e38ffa1b982b833, on the
 testnet3 chain, at blockheight 1201739, transaction position 2 and tx <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑥">outpoint index</a> 1 is 
-<pre>did:btcr:8kyt-fzzq-qpqq-ljsc-5l</pre>
+<pre>did:bsv:8kyt-fzzq-qpqq-ljsc-5l</pre>
    </div>
-   <h3 class="heading settled" data-level="3.3" id="btcr_construction"><span class="secno">3.3. </span><span class="content">BTCR DID construction</span><a class="self-link" href="#btcr_construction"></a></h3>
-    BTCR DID transactions can be constructed in two ways: with or without an OP_RETURN field. If the transaction does not have an OP_RETURN field, it is granted default capabilities constructed from the transaction itself, resulting in a generated DID document. Otherwise, its capabilities are determined by the DID document (called continuation document) referenced in the OP_RETURN field. 
+   <h3 class="heading settled" data-level="3.3" id="BSV_construction"><span class="secno">3.3. </span><span class="content">BSV DID construction</span><a class="self-link" href="#BSV_construction"></a></h3>
+    BSV DID transactions can be constructed in two ways: with or without an OP_RETURN field. If the transaction does not have an OP_RETURN field, it is granted default capabilities constructed from the transaction itself, resulting in a generated DID document. Otherwise, its capabilities are determined by the DID document (called continuation document) referenced in the OP_RETURN field. 
    <h3 class="heading settled" data-level="3.4" id="default_cap"><span class="secno">3.4. </span><span class="content">Default Capabilities</span><a class="self-link" href="#default_cap"></a></h3>
-    If an (unspent) BTCR DID’s transaction does not contain an OP_RETURN field, a DID resolver must generate the DID Document from the transaction itself. Specifically, it grants the transaction signing key the following capabilities: 
+    If an (unspent) BSV DID’s transaction does not contain an OP_RETURN field, a DID resolver must generate the DID Document from the transaction itself. Specifically, it grants the transaction signing key the following capabilities: 
    <ol>
     <li data-md>
      <p>Authentication</p>
@@ -1616,18 +1613,18 @@ testnet3 chain, at blockheight 1201739, transaction position 2 and tx <a data-li
     <a class="self-link" href="#example-1857c302"></a>
     <div class="marker">EXAMPLE: Detailed example of default capabilities</div>
 <pre>{
-    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/btcr/v1"],
-    "id": "did:btcr:xyv2-xzpq-q9wa-p7t",
+    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/BSV/v1"],
+    "id": "did:bsv:xyv2-xzpq-q9wa-p7t",
     "publicKey": [
        {
-            "id": "did:btcr:xyv2-xzpq-q9wa-p7t#satoshi",
-            "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
+            "id": "did:bsv:xyv2-xzpq-q9wa-p7t#satoshi",
+            "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
             "type": "EcdsaSecp256k1VerificationKey2019",
             "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
         },
         {
-             "id": "did:btcr:xyv2-xzpq-q9wa-p7t#vckey-0",
-             "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
+             "id": "did:bsv:xyv2-xzpq-q9wa-p7t#vckey-0",
+             "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
              "type": "EcdsaSecp256k1VerificationKey2019",
              "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
          }
@@ -1637,11 +1634,11 @@ testnet3 chain, at blockheight 1201739, transaction position 2 and tx <a data-li
 }
 </pre>
    </div>
-   <p>We will see in the following sections that this option of BTCR DID construction is only possible for the first transaction in a BTCR transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.</p>
+   <p>We will see in the following sections that this option of BSV DID construction is only possible for the first transaction in a BSV transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.</p>
    <h3 class="heading settled" data-level="3.5" id="continuation"><span class="secno">3.5. </span><span class="content">Continuation DID Documents</span><a class="self-link" href="#continuation"></a></h3>
-   <p>If an (unspent) BTCR DID’s transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.</p>
-   <p>With this construction, the DID document referenced by the transaction must be updated after  confirmation with the BTCR DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.</p>
-   <p>The OP_RETURN field may be used in the first transaction in a BTCR chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion.</p>
+   <p>If an (unspent) BSV DID’s transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.</p>
+   <p>With this construction, the DID document referenced by the transaction must be updated after  confirmation with the BSV DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.</p>
+   <p>The OP_RETURN field may be used in the first transaction in a BSV chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion.</p>
    <p class="note" role="note"><span>Note:</span> If the OP_RETURN exists, the continuation DID document obviates the need for additional implicit capabilities; we assume each capability is listed explicitly in the continuation DID document.</p>
    <h3 class="heading settled" data-level="3.6" id="following"><span class="secno">3.6. </span><span class="content">Following the tip</span><a class="self-link" href="#following"></a></h3>
    <p>The transaction <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑦">outpoint index</a> specified by DID, or first monetary <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑧">outpoint index</a> if not specified, is used for "following the tip". A spent <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint">outpoint</a> indicates an updated or deleted (revoked) DID. A DID resolver determines whether it’s updated (and finds the latest) or deleted by walking the chain of spent transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint①">outpoint</a> (or "following the tip) as follows.</p>
@@ -1650,30 +1647,30 @@ testnet3 chain, at blockheight 1201739, transaction position 2 and tx <a data-li
     transaction := (transaction that spent Outpoint)
 WHILE (current transaction Outpoint is spent OR OP_RETURN field is missing)
 </pre>
-   <p>If the latest transaction in the chain has no OP_RETURN, a BTCR DID is considered deleted (revoked).</p>
-   <p>Otherwise, the BTCR DID is not revoked, and the latest transaction in the chain should be used by the resolver.</p>
+   <p>If the latest transaction in the chain has no OP_RETURN, a BSV DID is considered deleted (revoked).</p>
+   <p>Otherwise, the BSV DID is not revoked, and the latest transaction in the chain should be used by the resolver.</p>
    <h2 class="heading settled" data-level="4" id="operations"><span class="secno">4. </span><span class="content">Operations</span><a class="self-link" href="#operations"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="creating"><span class="secno">4.1. </span><span class="content">Creating a DID</span><a class="self-link" href="#creating"></a></h3>
-   <p>A BTCR DID is created by creating a Bitcoin transaction with an optional
+   <p>A BSV DID is created by creating a BitcoinSV transaction with an optional
 OP_RETURN data field referring to additional DID document material, as
 described in this section.</p>
    <p>Abbreviations:</p>
    <ul>
     <li data-md>
-     <p>Bi = bitcoin address i</p>
+     <p>Bi = BitcoinSV address i</p>
     <li data-md>
      <p>Pi = public key i</p>
     <li data-md>
      <p>Si = signing key i (or private key i)</p>
    </ul>
-   <p>Creating the initial BTCR DID:</p>
+   <p>Creating the initial BSV DID:</p>
    <ol>
     <li data-md>
      <p>Create key set (B0/P0/S0)</p>
     <li data-md>
      <p>Create key set (B1/P1/S1)</p>
     <li data-md>
-     <p>Create Bitcoin transaction:</p>
+     <p>Create BitcoinSV transaction:</p>
      <ol>
       <li data-md>
        <p>Output: Change address B1</p>
@@ -1683,15 +1680,15 @@ described in this section.</p>
        <p>Signing key is S0, which reveals public key P0 in the transaction</p>
      </ol>
     <li data-md>
-     <p>Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-btcr/issues/7">didm-btcr issue 7</a></p>
+     <p>Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-BSV/issues/7">didm-BSV issue 7</a></p>
     <li data-md>
      <p>Get TX Ref encoding of the confirmed transaction TxRef(TX0)</p>
    </ol>
-   <p>At this point we have a DID of the format did:btcr:TxRef(TX0).</p>
+   <p>At this point we have a DID of the format did:bsv:TxRef(TX0).</p>
    <h3 class="heading settled" data-level="4.2" id="reading"><span class="secno">4.2. </span><span class="content">Reading a DID</span><a class="self-link" href="#reading"></a></h3>
    <ol>
     <li data-md>
-     <p>Extract the transaction references from the BTCR DID (i.e. did:btcr:TxRef(TX0))</p>
+     <p>Extract the transaction references from the BSV DID (i.e. did:bsv:TxRef(TX0))</p>
     <li data-md>
      <p>Look up transaction. Is the <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index⑨">outpoint index</a> spent?</p>
      <ul>
@@ -1701,10 +1698,10 @@ described in this section.</p>
        <p>yes: keep following transaction chain until the latest with an unspent <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint③">outpoint</a> is found</p>
      </ul>
    </ol>
-   <p>See <a href="https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/pull/74"> BTCR resolver</a> for additional details. TODO: merge in</p>
+   <p>See <a href="https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/pull/74"> BSV resolver</a> for additional details. TODO: merge in</p>
    <h3 class="heading settled" data-level="4.3" id="updating"><span class="secno">4.3. </span><span class="content">Updating a DID</span><a class="self-link" href="#updating"></a></h3>
-   <p>An entity updates the BTCR DID Description by spending the current
-transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint④">outpoint</a>. The BTCR Transaction Structure diagram shows how
+   <p>An entity updates the BSV DID Description by spending the current
+transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint④">outpoint</a>. The BSV Transaction Structure diagram shows how
 that is done in this second transaction.</p>
    <ol>
     <li data-md>
@@ -1714,10 +1711,10 @@ that is done in this second transaction.</p>
     <li data-md>
      <p>Sign tx with S1 (P1 is revealed)</p>
    </ol>
-   <p><img alt="BTCR Transaction Structure" src="diagrams/btcr-tx-ref.png"></p>
+   <p><img alt="BSV Transaction Structure" src="diagrams/BSV-tx-ref.png"></p>
    <h3 class="heading settled" data-level="4.4" id="deleting"><span class="secno">4.4. </span><span class="content">Deleting a DID</span><a class="self-link" href="#deleting"></a></h3>
-   <p>A BTCR DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BTCR DID chain.</p>
-   <p>An entity updates the BTCR DID Description by spending the current transaction output. The BTCR Transaction Structure diagram shows how that is done in this second transaction.</p>
+   <p>A BSV DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BSV DID chain.</p>
+   <p>An entity updates the BSV DID Description by spending the current transaction output. The BSV Transaction Structure diagram shows how that is done in this second transaction.</p>
    <ol>
     <li data-md>
      <p>Create new tx like above, but send to B2</p>
@@ -1776,23 +1773,23 @@ Operations).
    <h3 class="heading settled" data-level="7.3" id="herd-privacy"><span class="secno">7.3. </span><span class="content">Herd Privacy</span><a class="self-link" href="#herd-privacy"></a></h3>
    <h2 class="heading settled" id="appendix-a-examples"><span class="content">Appendix A: Examples</span><a class="self-link" href="#appendix-a-examples"></a></h2>
    <h3 class="heading settled" id="typical-did-document"><span class="content">Typical DID Document</span><a class="self-link" href="#typical-did-document"></a></h3>
-   <p>The following is a complete example of a typical BTCR DID Document:</p>
+   <p>The following is a complete example of a typical BSV DID Document:</p>
    <div class="example no-marker" id="example-7544a0ed">
     <a class="self-link" href="#example-7544a0ed"></a>
-    <div class="marker">EXAMPLE: Typical BTCR DID Document</div>
+    <div class="marker">EXAMPLE: Typical BSV DID Document</div>
 <pre>{
-    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/btcr/v1"],
-    "id": "did:btcr:xyv2-xzpq-q9wa-p7t",
+    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/BSV/v1"],
+    "id": "did:bsv:xyv2-xzpq-q9wa-p7t",
     "publicKey": [
        {
-            "id": "did:btcr:xyv2-xzpq-q9wa-p7t#satoshi",
-            "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
+            "id": "did:bsv:xyv2-xzpq-q9wa-p7t#satoshi",
+            "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
             "type": "EcdsaSecp256k1VerificationKey2019",
             "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
         },
         {
-             "id": "did:btcr:xyv2-xzpq-q9wa-p7t#vckey-0",
-             "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
+             "id": "did:bsv:xyv2-xzpq-q9wa-p7t#vckey-0",
+             "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
              "type": "EcdsaSecp256k1VerificationKey2019",
              "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
          }
@@ -1801,8 +1798,8 @@ Operations).
     "assertionMethod": ["#vckey-0"],
     "service":
       {
-        "id": "did:btcr:xyv2-xzpq-q9wa-p7t#CRS",
-        "type": "BTCR-CredentialRepositoryService",
+        "id": "did:bsv:xyv2-xzpq-q9wa-p7t#CRS",
+        "type": "BSV-CredentialRepositoryService",
       "serviceEndpoint": "https://github.com/ChristopherA/self/blob/master/ddo.jsonld?hl=z87f623hkjh578v76dsf873h"
       },
 }
@@ -2026,7 +2023,7 @@ Operations).
    <ul>
     <li><a href="#ref-for-outpoint-index">2. Terminology</a>
     <li><a href="#ref-for-outpoint-index①">3.1. Txref</a> <a href="#ref-for-outpoint-index②">(2)</a> <a href="#ref-for-outpoint-index③">(3)</a> <a href="#ref-for-outpoint-index④">(4)</a> <a href="#ref-for-outpoint-index⑤">(5)</a>
-    <li><a href="#ref-for-outpoint-index⑥">3.2. BTCR DID Format</a>
+    <li><a href="#ref-for-outpoint-index⑥">3.2. BSV DID Format</a>
     <li><a href="#ref-for-outpoint-index⑦">3.6. Following the tip</a> <a href="#ref-for-outpoint-index⑧">(2)</a>
     <li><a href="#ref-for-outpoint-index⑨">4.2. Reading a DID</a>
    </ul>
