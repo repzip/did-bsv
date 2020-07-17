@@ -1487,27 +1487,12 @@ Parts of this work may be from another specification document.  If so, those par
    </ol>
   </nav>
   <main>
-   <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
-   <p>The BitcoinSV Reference DID method (did:bsv) supports DIDs on the public
-BitcoinSV <a data-link-type="dfn" href="#blockchain" id="ref-for-blockchain">blockchain</a>. The BitcoinSV Reference method has minimal design
-goals: a DID trust anchor based on the BitcoinSV blockchain, updates
-publicly visible and auditable via BitcoinSV transactions, and optionally,
-additional DID Document information referenced in the transaction
-OP_RETURN data field. No other Personal Identifiable Information (PII)
-would be placed on the immutable blockchain.</p>
-   <p>A secondary intent of the BSV method is to serve as a very
-conservative, very secure example and some best practices for creating a
-DID method. The use cases for BSV are focused on anonymous and
-pseudo-anonymous identities, web-of-trust style webs of identity, and
-absolute mimimal personal information disclosure. Other DID methods will
-likely need to loosen these standards.</p>
-   <p>Some aspects of the BSV method will not be practical if inappropriately
-scaled — for instance, there is a transaction cost to update keys and
-DDO object, potential UTXO inflation (i.e. one additional unspent output
-for every BSV-based identity), and even if segwit isn’t used it could
-cause blockchain bloat. However, identities using the BSV method can be
-a strong as BitcoinSV itself -- currently securing billions of dollars of
-digital value.</p>
+   <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">BitcoinSV DID Method</span><a class="self-link" href="#intro"></a></h2>
+   <p>The namestring that shall identify this DID method is: bsv
+
+	A DID that uses this method MUST begin with the following prefix: did:bsv. 
+	Per the DID specification, this string MUST be in lowercase. The remainder of the DID, after the prefix, is the NSI specified below.</p>
+  
    <h2 class="heading settled" data-level="2" id="terminology"><span class="secno">2. </span><span class="content">Terminology</span><a class="self-link" href="#terminology"></a></h2>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="block">block</dfn>: A data structure that contains one or more <a data-link-type="dfn" href="#ledger" id="ref-for-ledger">ledger</a> events.</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="blockchain">blockchain</dfn>: A <a data-link-type="dfn" href="#ledger" id="ref-for-ledger①">ledger</a> containing a series of <a data-link-type="dfn" href="#block" id="ref-for-block">block</a>s
@@ -1517,9 +1502,6 @@ correct.</p>
 in a network to make a decision in a deterministic fashion.</p>
    <p><dfn data-dfn-type="dfn" data-noexport id="continuation-did-document">continuation <a data-link-type="dfn" href="#did" id="ref-for-did">DID</a> document<a class="self-link" href="#continuation-did-document"></a></dfn>: A continuation <a data-link-type="dfn" href="#did" id="ref-for-did①">DID</a> document is an optional document external to the BitcoinSV transaction providing
 additional DID document keys, ...</p>
-   <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="cryptographic-ledger">cryptographic ledger</dfn>: A method of recording changes in a
-state machine where the accuracy of the ledger can be mathematically
-proven to be correct.</p>
    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="did">DID</dfn>: a decentralized identitfier.</p>
    <p><dfn data-dfn-type="dfn" data-noexport id="decentralized-system">decentralized system<a class="self-link" href="#decentralized-system"></a></dfn>: A system in which lower level
 components operate on local information to accomplish global goals. For
@@ -1534,12 +1516,10 @@ to consensus in a decentralized yet deterministic fashion.</p>
 This terminology is chosen for consistency with <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">BIP-136</a>.</p>
    <h2 class="heading settled" data-level="3" id="concepts"><span class="secno">3. </span><span class="content">Basic Concepts</span><a class="self-link" href="#concepts"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="txref"><span class="secno">3.1. </span><span class="content">Txref</span><a class="self-link" href="#txref"></a></h3>
-   <p>BSV identifiers use the TxRef encoding to refer to a transaction position within the BitcoinSV blockchain, as described in BIP-0136, <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">Bech32 Encoded Transaction Position References</a>. A TxRef encodes the chain, blockheight, and transaction index where the transaction is located, and an optional reference to the <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index①">outpoint index</a> within the transaction.</p>
-   <p>Because the TxRef encodes the transaction’s position in the BitcoinSV blockchain, that means it is only known after a transaction has been confirmed. That distinguishes it from, for example, transaction ids (hashes), which are known even before confirmation.</p>
-   <p>Modifications to BIP-0136:</p>
+   <p>BSV identifiers use a compressed Public Key in hex as the unique identifier for each DID. </p>
    <ol>
     <li data-md>
-     <p>The BSV Method Specification has chosen to elide chain-specific prefixes (e.g. tx1 or txtest1), as permitted by BIP-0136.</p>
+     <p>The BSV Method Specification has chosen to elide chain-specific prefixes (e.g. testnet, scaling or by defaul mainnet), as permitted by BIP-0136.</p>
    </ol>
    <div class="example no-marker" id="example-60324f33">
     <a class="self-link" href="#example-60324f33"></a>
@@ -1571,9 +1551,9 @@ we want to specify the second transaction <a data-link-type="dfn" href="#outpoin
 <pre>f8cdaff3ebd9e862ed5885f8975489090595abe1470397f79780ead1c7528107</pre>
     , if referring to outpoint index 0, the BSV DID must be resolved as follows: 
     <p>VALID: </p>
-<pre>did:bsv:xyv2-xzpq-q9wa-p7t</pre>
+<pre>did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa</pre>
      INVALID: 
-<pre>did:bsv:8yv2-xzpq-qqqq-9yce-nk</pre>
+<pre>did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa</pre>
     <p></p>
    </div>
    <p>BIP136 supports both forms for index 0, but we are making the decision that BSV supports only the short form when index==0. This is for the following reasons:</p>
@@ -1614,17 +1594,17 @@ testnet3 chain, at blockheight 1201739, transaction position 2 and tx <a data-li
     <div class="marker">EXAMPLE: Detailed example of default capabilities</div>
 <pre>{
     "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/BSV/v1"],
-    "id": "did:bsv:xyv2-xzpq-q9wa-p7t",
+    "id": "did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa",
     "publicKey": [
        {
-            "id": "did:bsv:xyv2-xzpq-q9wa-p7t#satoshi",
-            "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
+            "id": "did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa#satoshi",
+            "controller": "did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa",
             "type": "EcdsaSecp256k1VerificationKey2019",
             "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
         },
         {
-             "id": "did:bsv:xyv2-xzpq-q9wa-p7t#vckey-0",
-             "controller": "did:bsv:xyv2-xzpq-q9wa-p7t",
+             "id": "did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa#vckey-0",
+             "controller": "did:bsv:034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa",
              "type": "EcdsaSecp256k1VerificationKey2019",
              "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
          }
@@ -1684,7 +1664,7 @@ described in this section.</p>
     <li data-md>
      <p>Get TX Ref encoding of the confirmed transaction TxRef(TX0)</p>
    </ol>
-   <p>At this point we have a DID of the format did:bsv:TxRef(TX0).</p>
+   <p>At this point we have a DID of the format did:bsv:[Compressed ECDSA Pubkey in hex]</p>
    <h3 class="heading settled" data-level="4.2" id="reading"><span class="secno">4.2. </span><span class="content">Reading a DID</span><a class="self-link" href="#reading"></a></h3>
    <ol>
     <li data-md>

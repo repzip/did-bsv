@@ -1,5 +1,5 @@
 # didm-btcr
-BTCR DID Method Spec
+BSV DID Method Spec
 
 ## Running bikeshed
 
