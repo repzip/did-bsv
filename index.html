@@ -1223,7 +1223,6 @@
 	   }
    </style>
 	 <meta content="Bikeshed version 6cf40e14, updated Fri Aug 14 17:42:41 2020 -0700" name="generator">
-	 <link continuation ddo to>
    <style>/* style-autolinks */
    
    .css.css, .property.property, .descriptor.descriptor {
@@ -1448,32 +1447,32 @@
 		 <li><a href="#BSV_construction"><span class="secno">3.3</span> <span class="content">BSV DID construction</span></a>
 		 <li><a href="#default_cap"><span class="secno">3.4</span> <span class="content">Default Capabilities</span></a>
 		 <li><a href="#continuation"><span class="secno">3.5</span> <span class="content">Continuation DID Documents</span></a>
-		 <li><a href="#following"><span class="secno">3.6</span> <span class="content">Following the tip</span></a>
+		</ol>
+	   <li><a href="#metanet①"><span class="secno">4</span> <span class="content">The Metanet</span></a>
+	   <li>
+		<a href="#operations"><span class="secno">5</span> <span class="content">Operations</span></a>
+		<ol class="toc">
+		 <li><a href="#creating"><span class="secno">5.1</span> <span class="content">Creating a DID</span></a>
+		 <li><a href="#reading"><span class="secno">5.2</span> <span class="content">Reading a DID</span></a>
+		 <li><a href="#updating"><span class="secno">5.3</span> <span class="content">Updating a DID</span></a>
+		 <li><a href="#deleting"><span class="secno">5.4</span> <span class="content">Deleting a DID</span></a>
+		</ol>
+	   <li><a href="#versioning"><span class="secno">6</span> <span class="content">Versioning</span></a>
+	   <li>
+		<a href="#security"><span class="secno">7</span> <span class="content">Security Considerations</span></a>
+		<ol class="toc">
+		 <li><a href="#binding-of-identity"><span class="secno">7.1</span> <span class="content">Binding of Identity</span></a>
+		 <li><a href="#authentication-service-endpoints"><span class="secno">7.2</span> <span class="content">Authentication Service Endpoints</span></a>
+		 <li><a href="#non-repudiation"><span class="secno">7.3</span> <span class="content">Non-Repudiation</span></a>
+		 <li><a href="#notification-of-ddo-changes"><span class="secno">7.4</span> <span class="content">Notification of DDO Changes</span></a>
+		 <li><a href="#key-and-signature-expiration"><span class="secno">7.5</span> <span class="content">Key and Signature Expiration</span></a>
+		 <li><a href="#key-revocation-and-recovery"><span class="secno">7.6</span> <span class="content">Key Revocation and Recovery</span></a>
 		</ol>
 	   <li>
-		<a href="#operations"><span class="secno">4</span> <span class="content">Operations</span></a>
+		<a href="#privacy-considerations"><span class="secno">8</span> <span class="content">Privacy Considerations</span></a>
 		<ol class="toc">
-		 <li><a href="#creating"><span class="secno">4.1</span> <span class="content">Creating a DID</span></a>
-		 <li><a href="#reading"><span class="secno">4.2</span> <span class="content">Reading a DID</span></a>
-		 <li><a href="#updating"><span class="secno">4.3</span> <span class="content">Updating a DID</span></a>
-		 <li><a href="#deleting"><span class="secno">4.4</span> <span class="content">Deleting a DID</span></a>
-		</ol>
-	   <li><a href="#versioning"><span class="secno">5</span> <span class="content">Versioning</span></a>
-	   <li>
-		<a href="#security"><span class="secno">6</span> <span class="content">Security Considerations</span></a>
-		<ol class="toc">
-		 <li><a href="#binding-of-identity"><span class="secno">6.1</span> <span class="content">Binding of Identity</span></a>
-		 <li><a href="#authentication-service-endpoints"><span class="secno">6.2</span> <span class="content">Authentication Service Endpoints</span></a>
-		 <li><a href="#non-repudiation"><span class="secno">6.3</span> <span class="content">Non-Repudiation</span></a>
-		 <li><a href="#notification-of-ddo-changes"><span class="secno">6.4</span> <span class="content">Notification of DDO Changes</span></a>
-		 <li><a href="#key-and-signature-expiration"><span class="secno">6.5</span> <span class="content">Key and Signature Expiration</span></a>
-		 <li><a href="#key-revocation-and-recovery"><span class="secno">6.6</span> <span class="content">Key Revocation and Recovery</span></a>
-		</ol>
-	   <li>
-		<a href="#privacy-considerations"><span class="secno">7</span> <span class="content">Privacy Considerations</span></a>
-		<ol class="toc">
-		 <li><a href="#ddo-correlation-risks"><span class="secno">7.1</span> <span class="content">DDO Correlation Risks</span></a>
-		 <li><a href="#herd-privacy"><span class="secno">7.2</span> <span class="content">Herd Privacy</span></a>
+		 <li><a href="#ddo-correlation-risks"><span class="secno">8.1</span> <span class="content">DDO Correlation Risks</span></a>
+		 <li><a href="#herd-privacy"><span class="secno">8.2</span> <span class="content">Herd Privacy</span></a>
 		</ol>
 	   <li>
 		<a href="#appendix-a-examples"><span class="secno"></span> <span class="content">Appendix A: Examples</span></a>
@@ -1606,104 +1605,84 @@
    }
    </pre>
 	  </div>
-	  <p>We will see in the following sections that this option of BSV DID construction is only possible for the first transaction in a BSV transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.</p>
 	  <h3 class="heading settled" data-level="3.5" id="continuation"><span class="secno">3.5. </span><span class="content">Continuation DID Documents</span><a class="self-link" href="#continuation"></a></h3>
-	  <p>If an BSV DID’s transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.</p>
-	  <p>With this construction, the DID document referenced by the transaction must be updated after confirmation with the BSV DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.</p>
-	  <p>The OP_RETURN field may be used in the first transaction in a BSV chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion.</p>
-	  <p class="note" role="note"><span>Note:</span> If the OP_RETURN exists, the continuation DID document obviates the need for additional implicit capabilities; we assume each capability is listed explicitly in the continuation DID document.</p>
-	  <h3 class="heading settled" data-level="3.6" id="following"><span class="secno">3.6. </span><span class="content">Following the tip</span><a class="self-link" href="#following"></a></h3>
-	  <p>The transaction <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index①">outpoint index</a> specified by DID, or first monetary <a data-link-type="dfn" href="#outpoint-index" id="ref-for-outpoint-index②">outpoint index</a> if not specified, is used for "following the tip". A spent <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint">outpoint</a> indicates an updated or deleted (revoked) DID. A DID resolver determines whether it’s updated (and finds the latest) or deleted by walking the chain of spent transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint①">outpoint</a> (or "following the tip) as follows.</p>
-	  <p class="note" role="note"><span>Note:</span> If any transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint②">outpoint</a> is spent, then the transaction chain is greater than one by definition. This algorithm applies only to transaction chains greater than one. (TODO: awkward)</p>
-   <pre>DO
-	   transaction := (transaction that spent Outpoint)
-   WHILE (current transaction Outpoint is spent OR OP_RETURN field is missing)
-   </pre>
-	  <p>If the latest transaction in the chain has no OP_RETURN, a BSV DID is considered deleted (revoked).</p>
-	  <p>Otherwise, the BSV DID is not revoked, and the latest transaction in the chain should be used by the resolver.</p>
-	  <h2 class="heading settled" data-level="4" id="operations"><span class="secno">4. </span><span class="content">Operations</span><a class="self-link" href="#operations"></a></h2>
-	  <h3 class="heading settled" data-level="4.1" id="creating"><span class="secno">4.1. </span><span class="content">Creating a DID</span><a class="self-link" href="#creating"></a></h3>
-	  <p>A BSV DID is created by creating a Bitcoin transaction with an optional
-   OP_RETURN data field referring to additional DID document material, as
-   described in this section.</p>
-	  <p>Abbreviations:</p>
-	  <ul>
-	   <li data-md>
-		<p>Bi = bitcoin address i</p>
-	   <li data-md>
-		<p>Pi = public key i</p>
-	   <li data-md>
-		<p>Si = signing key i (or private key i)</p>
-	  </ul>
-	  <p>Creating the initial BSV DID:</p>
-	  <ol>
-	   <li data-md>
-		<p>Create key set (B0/P0/S0)</p>
-	   <li data-md>
-		<p>Create key set (B1/P1/S1)</p>
-	   <li data-md>
-		<p>Create Bitcoin transaction:</p>
-		<ol>
-		 <li data-md>
-		  <p>Output: Change address B1</p>
-		 <li data-md>
-		  <p>Optional output: OP_RETURN </p>
-		 <li data-md>
-		  <p>Signing key is S0, which reveals public key P0 in the transaction</p>
-		</ol>
-	   <li data-md>
-		<p>Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-BSV/issues/7">didm-BSV issue 7</a></p>
-	   <li data-md>
-		<p>Get TX Ref encoding of the confirmed transaction TxRef(TX0)</p>
-	  </ol>
-	  <p>At this point we have a DID of the format did:bsv:TxRef(TX0).</p>
-	  <h3 class="heading settled" data-level="4.2" id="reading"><span class="secno">4.2. </span><span class="content">Reading a DID</span><a class="self-link" href="#reading"></a></h3>
-	  <ol>
-	   <li data-md>
-		<p>Extract the Public Key from the BSV DID (i.e. did:bsv:TxRef(TX0))</p>
-	   <li data-md>
-		<p>Look up the Metanet Graph for the latest corresponding Transaction.</p>
-		<ul>
-		 <li data-md>
-		  <p>no: this is the latest version of the DID. From this we can construct the DID Description (described below)</p>
-		 <li data-md>
-		  <p>yes: keep following transaction chain until the latest with an unspent <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint③">outpoint</a> is found</p>
-		</ul>
-	  </ol>
-	  <p>See <a href="https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/pull/74"> BSV resolver</a> for additional details. TODO: merge in</p>
-	  <h3 class="heading settled" data-level="4.3" id="updating"><span class="secno">4.3. </span><span class="content">Updating a DID</span><a class="self-link" href="#updating"></a></h3>
-	  <p>An entity updates the BSV DID Description by spending the current
-   transaction <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint④">outpoint</a>. The BSV Transaction Structure diagram shows how
-   that is done in this second transaction.</p>
-	  <ol>
-	   <li data-md>
-		<p>Create new tx like above, but send to B2</p>
-	   <li data-md>
-		<p>Set the OP_RETURN to the new DID Description</p>
-	   <li data-md>
-		<p>Sign tx with S1 (P1 is revealed)</p>
-	  </ol>
-	  <p><img alt="BSV Transaction Structure" src="diagrams/BSV-tx-ref.png"></p>
-	  <h3 class="heading settled" data-level="4.4" id="deleting"><span class="secno">4.4. </span><span class="content">Deleting a DID</span><a class="self-link" href="#deleting"></a></h3>
-	  <p>A BSV DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BSV DID chain.</p>
-	  <p>An entity updates the BSV DID Description by spending the current transaction output. The BSV Transaction Structure diagram shows how that is done in this second transaction.</p>
-	  <ol>
-	   <li data-md>
-		<p>Create new tx like above, but send to B2</p>
-	   <li data-md>
-		<p>Omit the OP_RETURN</p>
-	   <li data-md>
-		<p>Sign tx with S1 (P1 is revealed)</p>
-	  </ol>
-	  <h2 class="heading settled" data-level="5" id="versioning"><span class="secno">5. </span><span class="content">Versioning</span><a class="self-link" href="#versioning"></a></h2>
-	  <p>Version of this Specification</p>
-	  <p>[Define how this spec will be versioned. This SHOULD be by using the
+	  <h2 class="heading settled" data-level="4" id="metanet①"><span class="secno">4. </span><span class="content">The Metanet</span><a class="self-link" href="#metanet①"></a></h2>
+	  <p>Version control - If there are two nodes with the same public key, then we interpret the node
+	   with transaction ID with greatest proof of work as the latest version of that node.
+	   If the nodes are in different blocks, then this can be checked with the block height. For
+	   transactions in the same block, this is determined by the Topological Transaction Ordering Rule
+	   (TTOR).</p>
+	  <p>Permissioning - A child of a node can only be created if the owner of the public key 𝑃𝑛𝑜𝑑𝑒 signs
+	   the transaction input in the creation of a child node. Therefore 𝑃𝑛𝑜𝑑𝑒 not only represents the
+	   address of a node but also the permission to create a child node. This is analogous to a standard
+	   bitcoin transaction – a public key is not only an address but also the permission associated with
+	   that address.</p>
+	  <p>Note that since the signature of the parent node appears in a UXTO unlocking script it is validated
+	   through the standard miner validation process at the point when the transaction is accepted to
+	   the network. This means that the permission to create a child node is validated by the bitcoin</p>
+	  <h2 class="heading settled" data-level="5" id="operations"><span class="secno">5. </span><span class="content">Operations</span><a class="self-link" href="#operations"></a></h2>
+	  <h3 class="heading settled" data-level="5.1" id="creating"><span class="secno">5.1. </span><span class="content">Creating a DID</span><a class="self-link" href="#creating"></a></h3>
+	  <p>Using OP_RETURN alone
+	   The diagram below shows a Metanet node containing all content data within a single OP_RETURN
+	   output.
+	   Figure 4. A Metanet node using a single OP_RETURN.
+	   The file name and file type are included as optional attributes in the OP_RETURN output, followed
+	   by the actual payload of file data itself.
+	   Any set of attributes and schemas may be included depending on the file type or use case to encode
+	   the relevant metadata, and the file data may be split into several discrete chunks within the output
+	   itself.
+	   𝑇𝑥𝐼𝐷𝑛𝑜𝑑𝑒
+	   Inputs Outputs
+	   &lt; 𝑆𝑖𝑔 𝑃𝑝𝑎𝑟𝑒𝑛𝑡> &lt;𝑃𝑝𝑎𝑟𝑒𝑛𝑡>
+	   OP_RETURN &lt;𝑀𝑒𝑡𝑎𝑛𝑒𝑡 𝐹𝑙𝑎𝑔> &lt;𝑃𝑛𝑜𝑑𝑒> &lt;𝑇𝑥𝐼𝐷𝑝𝑎𝑟𝑒𝑛𝑡></p>
+	  <file_name>
+	   <file_type>
+		<file_data>
+		 <p>The Metanet</p>
+		 <p>Using OP_RETURN and OP_DROP</p>
+		 <p>The diagram below shows a Metanet node in which the file data has been split across two spendable
+	   outputs in OP_DROP statements. This insertion method may be used if a large file is to be
+	   embedded, or simply if the user wishes to create fewer provably unspendable outputs.</p>
+		 <p>Figure 5. A Metanet node using an OP_RETURN in conjunction with OP_PUSHDATA.</p>
+		 <p>In this scenario, we have assumed it is sensible to include all the metadata and attributes within the
+	   OP_RETURN output, which then acts as a ‘header’ for the file.</p>
+		 <p>
+		  However, it is just as plausible that additional attributes could be included in the spendable outputs
+	   if, for example, there were attributes that applied to 
+		  <file_data U00031>
+			but not 
+		   <file_data U00032>.
+	   Note that we have even included an additional identifier <sub-protocol identifier> to signify the use
+	   of a specific hypothetical data-insertion protocol. We see that the sub-protocol fits within the Metanet
+	   protocol itself, and can be considered an overlay protocol on top of the umbrella protocol that is the
+	   Metanet.</sub-protocol></file_data>
+		  </file_data>
+		 </p>
+		 <h3 class="heading settled" data-level="5.2" id="reading"><span class="secno">5.2. </span><span class="content">Reading a DID</span><a class="self-link" href="#reading"></a></h3>
+		 <ol>
+		  <li data-md>
+		   <p>Extract the Public Key from the BSV DID</p>
+		  <li data-md>
+		   <p>Look up the Metanet Graph for the latest corresponding Transaction.</p>
+		   <ul>
+			<li data-md>
+			 <p>no: this is the latest version of the DID. From this we can construct the DID Description (described below)</p>
+			<li data-md>
+			 <p>yes: keep following transaction chain until the latest with an unspent <a data-link-type="dfn" href="#outpoint" id="ref-for-outpoint">outpoint</a> is found</p>
+		   </ul>
+		 </ol>
+		 <p>See <a href="https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/pull/74"> BSV resolver</a> for additional details. TODO: merge in</p>
+		 <h3 class="heading settled" data-level="5.3" id="updating"><span class="secno">5.3. </span><span class="content">Updating a DID</span><a class="self-link" href="#updating"></a></h3>
+		 <h3 class="heading settled" data-level="5.4" id="deleting"><span class="secno">5.4. </span><span class="content">Deleting a DID</span><a class="self-link" href="#deleting"></a></h3>
+		 <h2 class="heading settled" data-level="6" id="versioning"><span class="secno">6. </span><span class="content">Versioning</span><a class="self-link" href="#versioning"></a></h2>
+		 <p>Version of this Specification</p>
+		 <p>[Define how this spec will be versioned. This SHOULD be by using the
    bikeshed versioning mechanism.]</p>
-	  <p>Version of the JSON-LD Context</p>
-	  <p>[Define how your JSON-LD context will be versioned. This MUST use the
+		 <p>Version of the JSON-LD Context</p>
+		 <p>[Define how your JSON-LD context will be versioned. This MUST use the
    mechanism defined in the DID spec.]</p>
-	  <h2 class="heading settled" data-level="6" id="security"><span class="secno">6. </span><span class="content">Security Considerations</span><a class="self-link" href="#security"></a></h2>
-	  <p>Requirements from Method Spec Template definition:</p>
+		 <h2 class="heading settled" data-level="7" id="security"><span class="secno">7. </span><span class="content">Security Considerations</span><a class="self-link" href="#security"></a></h2>
+		 <p>Requirements from Method Spec Template definition:</p>
    <pre>At least the following forms of attack MUST be considered:
    eavesdropping, replay, message insertion, deletion, modification,
    impersonation, and man-in-the-middle.
@@ -1733,21 +1712,21 @@
    for all operations required by Section 7 of this specification (DID
    Operations).
    </pre>
-	  <h3 class="heading settled" data-level="6.1" id="binding-of-identity"><span class="secno">6.1. </span><span class="content">Binding of Identity</span><a class="self-link" href="#binding-of-identity"></a></h3>
-	  <h3 class="heading settled" data-level="6.2" id="authentication-service-endpoints"><span class="secno">6.2. </span><span class="content">Authentication Service Endpoints</span><a class="self-link" href="#authentication-service-endpoints"></a></h3>
-	  <h3 class="heading settled" data-level="6.3" id="non-repudiation"><span class="secno">6.3. </span><span class="content">Non-Repudiation</span><a class="self-link" href="#non-repudiation"></a></h3>
-	  <h3 class="heading settled" data-level="6.4" id="notification-of-ddo-changes"><span class="secno">6.4. </span><span class="content">Notification of DDO Changes</span><a class="self-link" href="#notification-of-ddo-changes"></a></h3>
-	  <h3 class="heading settled" data-level="6.5" id="key-and-signature-expiration"><span class="secno">6.5. </span><span class="content">Key and Signature Expiration</span><a class="self-link" href="#key-and-signature-expiration"></a></h3>
-	  <h3 class="heading settled" data-level="6.6" id="key-revocation-and-recovery"><span class="secno">6.6. </span><span class="content">Key Revocation and Recovery</span><a class="self-link" href="#key-revocation-and-recovery"></a></h3>
-	  <h2 class="heading settled" data-level="7" id="privacy-considerations"><span class="secno">7. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
-	  <h3 class="heading settled" data-level="7.1" id="ddo-correlation-risks"><span class="secno">7.1. </span><span class="content">DDO Correlation Risks</span><a class="self-link" href="#ddo-correlation-risks"></a></h3>
-	  <h3 class="heading settled" data-level="7.2" id="herd-privacy"><span class="secno">7.2. </span><span class="content">Herd Privacy</span><a class="self-link" href="#herd-privacy"></a></h3>
-	  <h2 class="heading settled" id="appendix-a-examples"><span class="content">Appendix A: Examples</span><a class="self-link" href="#appendix-a-examples"></a></h2>
-	  <h3 class="heading settled" id="typical-full-did-document"><span class="content">Typical Full DID Document</span><a class="self-link" href="#typical-full-did-document"></a></h3>
-	  <p>The following is a complete example of a typical BSV DID Document with MetanetSPV Proof:</p>
-	  <div class="example no-marker" id="example-2c3c4a12">
-	   <a class="self-link" href="#example-2c3c4a12"></a>
-	   <div class="marker">EXAMPLE: Typical BSV DID Document</div>
+		 <h3 class="heading settled" data-level="7.1" id="binding-of-identity"><span class="secno">7.1. </span><span class="content">Binding of Identity</span><a class="self-link" href="#binding-of-identity"></a></h3>
+		 <h3 class="heading settled" data-level="7.2" id="authentication-service-endpoints"><span class="secno">7.2. </span><span class="content">Authentication Service Endpoints</span><a class="self-link" href="#authentication-service-endpoints"></a></h3>
+		 <h3 class="heading settled" data-level="7.3" id="non-repudiation"><span class="secno">7.3. </span><span class="content">Non-Repudiation</span><a class="self-link" href="#non-repudiation"></a></h3>
+		 <h3 class="heading settled" data-level="7.4" id="notification-of-ddo-changes"><span class="secno">7.4. </span><span class="content">Notification of DDO Changes</span><a class="self-link" href="#notification-of-ddo-changes"></a></h3>
+		 <h3 class="heading settled" data-level="7.5" id="key-and-signature-expiration"><span class="secno">7.5. </span><span class="content">Key and Signature Expiration</span><a class="self-link" href="#key-and-signature-expiration"></a></h3>
+		 <h3 class="heading settled" data-level="7.6" id="key-revocation-and-recovery"><span class="secno">7.6. </span><span class="content">Key Revocation and Recovery</span><a class="self-link" href="#key-revocation-and-recovery"></a></h3>
+		 <h2 class="heading settled" data-level="8" id="privacy-considerations"><span class="secno">8. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
+		 <h3 class="heading settled" data-level="8.1" id="ddo-correlation-risks"><span class="secno">8.1. </span><span class="content">DDO Correlation Risks</span><a class="self-link" href="#ddo-correlation-risks"></a></h3>
+		 <h3 class="heading settled" data-level="8.2" id="herd-privacy"><span class="secno">8.2. </span><span class="content">Herd Privacy</span><a class="self-link" href="#herd-privacy"></a></h3>
+		 <h2 class="heading settled" id="appendix-a-examples"><span class="content">Appendix A: Examples</span><a class="self-link" href="#appendix-a-examples"></a></h2>
+		 <h3 class="heading settled" id="typical-full-did-document"><span class="content">Typical Full DID Document</span><a class="self-link" href="#typical-full-did-document"></a></h3>
+		 <p>The following is a complete example of a typical BSV DID Document with MetanetSPV Proof:</p>
+		 <div class="example no-marker" id="example-2c3c4a12">
+		  <a class="self-link" href="#example-2c3c4a12"></a>
+		  <div class="marker">EXAMPLE: Typical BSV DID Document</div>
    <pre>{
 	 "@context": "https://www.w3.org/ns/did/v1",
 	 "id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
@@ -1799,7 +1778,10 @@
    }
    
    </pre>
-	  </div>
+		 </div>
+		</file_data>
+	   </file_type>
+	  </file_name>
 	 </main>
 	 <div data-fill-with="conformance">
 	  <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -2003,16 +1985,13 @@
 	 <aside class="dfn-panel" data-for="outpoint">
 	  <b><a href="#outpoint">#outpoint</a></b><b>Referenced in:</b>
 	  <ul>
-	   <li><a href="#ref-for-outpoint">3.6. Following the tip</a> <a href="#ref-for-outpoint①">(2)</a> <a href="#ref-for-outpoint②">(3)</a>
-	   <li><a href="#ref-for-outpoint③">4.2. Reading a DID</a>
-	   <li><a href="#ref-for-outpoint④">4.3. Updating a DID</a>
+	   <li><a href="#ref-for-outpoint">5.2. Reading a DID</a>
 	  </ul>
 	 </aside>
 	 <aside class="dfn-panel" data-for="outpoint-index">
 	  <b><a href="#outpoint-index">#outpoint-index</a></b><b>Referenced in:</b>
 	  <ul>
 	   <li><a href="#ref-for-outpoint-index">2. Terminology</a>
-	   <li><a href="#ref-for-outpoint-index①">3.6. Following the tip</a> <a href="#ref-for-outpoint-index②">(2)</a>
 	  </ul>
 	 </aside>
    <script>/* script-dfn-panel */

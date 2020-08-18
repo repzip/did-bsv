@@ -184,69 +184,90 @@ If an BSV DID's transaction does not contain an OP_RETURN field, a DID resolver 
 </pre>
 </div>
 
-We will see in the following sections that this option of BSV DID construction is only possible for the first transaction in a BSV transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.
+
 
 
 Continuation DID Documents {#continuation}
 --------------------------
 
-If an BSV DID's transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.
-
-With this construction, the DID document referenced by the transaction must be updated after confirmation with the BSV DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.
-
-The OP_RETURN field may be used in the first transaction in a BSV chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion. 
-
-Note: If the OP_RETURN exists, the continuation DID document obviates the need for additional implicit capabilities; we assume each capability is listed explicitly in the continuation DID document.
 
 
-Following the tip {#following}
------------------
+The Metanet {#metanet}
+============
 
-The transaction [=outpoint index=] specified by DID, or first monetary [=outpoint index=] if not specified, is used for "following the tip". A spent [=outpoint=] indicates an updated or deleted (revoked) DID. A DID resolver determines whether it's updated (and finds the latest) or deleted by walking the chain of spent transaction [=outpoint=] (or "following the tip) as follows.
 
-Note: If any transaction [=outpoint=] is spent, then the transaction chain is greater than one by definition. This algorithm applies only to transaction chains greater than one. (TODO: awkward)
+	Version control - If there are two nodes with the same public key, then we interpret the node
+	with transaction ID with greatest proof of work as the latest version of that node.
+	If the nodes are in different blocks, then this can be checked with the block height. For
+	transactions in the same block, this is determined by the Topological Transaction Ordering Rule
+	(TTOR).
 
-<pre>
-DO
-    transaction := (transaction that spent Outpoint)
-WHILE (current transaction Outpoint is spent OR OP_RETURN field is missing)
-</pre>
+	Permissioning - A child of a node can only be created if the owner of the public key 𝑃𝑛𝑜𝑑𝑒 signs
+	the transaction input in the creation of a child node. Therefore 𝑃𝑛𝑜𝑑𝑒 not only represents the
+	address of a node but also the permission to create a child node. This is analogous to a standard
+	bitcoin transaction – a public key is not only an address but also the permission associated with
+	that address.
 
-If the latest transaction in the chain has no OP_RETURN, a BSV DID is considered deleted (revoked).
+	Note that since the signature of the parent node appears in a UXTO unlocking script it is validated
+	through the standard miner validation process at the point when the transaction is accepted to
+	the network. This means that the permission to create a child node is validated by the bitcoin 
 
-Otherwise, the BSV DID is not revoked, and the latest transaction in the chain should be used by the resolver.
+
 
 Operations {#operations}
 ==========
 
+
 Creating a DID {#creating}
 --------------
 
-A BSV DID is created by creating a Bitcoin transaction with an optional
-OP_RETURN data field referring to additional DID document material, as
-described in this section.
+	Using OP_RETURN alone
+	The diagram below shows a Metanet node containing all content data within a single OP_RETURN
+	output.
+	Figure 4. A Metanet node using a single OP_RETURN.
+	The file name and file type are included as optional attributes in the OP_RETURN output, followed
+	by the actual payload of file data itself.
+	Any set of attributes and schemas may be included depending on the file type or use case to encode
+	the relevant metadata, and the file data may be split into several discrete chunks within the output
+	itself.
+	𝑇𝑥𝐼𝐷𝑛𝑜𝑑𝑒
+	Inputs Outputs
+	< 𝑆𝑖𝑔 𝑃𝑝𝑎𝑟𝑒𝑛𝑡> <𝑃𝑝𝑎𝑟𝑒𝑛𝑡>
+	OP_RETURN <𝑀𝑒𝑡𝑎𝑛𝑒𝑡 𝐹𝑙𝑎𝑔> <𝑃𝑛𝑜𝑑𝑒> <𝑇𝑥𝐼𝐷𝑝𝑎𝑟𝑒𝑛𝑡>
+	<file_name> <file_type>
+	<file_data>
 
-Abbreviations:
-* Bi = bitcoin address i
-* Pi = public key i
-* Si = signing key i (or private key i)
 
-Creating the initial BSV DID:
-1. Create key set (B0/P0/S0)
-2. Create key set (B1/P1/S1)
-3. Create Bitcoin transaction:
-    1. Output: Change address B1
-    2. Optional output: OP_RETURN <link to DDO continuation>
-    3. Signing key is S0, which reveals public key P0 in the transaction
-4. Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-BSV/issues/7">didm-BSV issue 7</a>
-5. Get TX Ref encoding of the confirmed transaction TxRef(TX0)
 
-At this point we have a DID of the format did:bsv:TxRef(TX0). 
+The Metanet
+
+
+Using OP_RETURN and OP_DROP
+
+	The diagram below shows a Metanet node in which the file data has been split across two spendable
+	outputs in OP_DROP statements. This insertion method may be used if a large file is to be
+	embedded, or simply if the user wishes to create fewer provably unspendable outputs.
+
+	Figure 5. A Metanet node using an OP_RETURN in conjunction with OP_PUSHDATA.
+
+	In this scenario, we have assumed it is sensible to include all the metadata and attributes within the
+	OP_RETURN output, which then acts as a ‘header’ for the file.
+
+	However, it is just as plausible that additional attributes could be included in the spendable outputs
+	if, for example, there were attributes that applied to <file_data 1> but not <file_data 2>.
+	Note that we have even included an additional identifier <sub-protocol identifier> to signify the use
+	of a specific hypothetical data-insertion protocol. We see that the sub-protocol fits within the Metanet
+	protocol itself, and can be considered an overlay protocol on top of the umbrella protocol that is the
+	Metanet.
+
+
+
+
 
 Reading a DID {#reading}
 -------------
 
-1. Extract the Public Key from the BSV DID (i.e. did:bsv:TxRef(TX0))
+1. Extract the Public Key from the BSV DID 
 2. Look up the Metanet Graph for the latest corresponding Transaction.
     * no: this is the latest version of the DID. From this we can construct the DID Description (described below)
     * yes: keep following transaction chain until the latest with an unspent [=outpoint=] is found
@@ -259,27 +280,12 @@ BSV resolver</a> for additional details. TODO: merge in
 Updating a DID {#updating}
 --------------
 
-An entity updates the BSV DID Description by spending the current
-transaction [=outpoint=]. The BSV Transaction Structure diagram shows how
-that is done in this second transaction.
-
-1. Create new tx like above, but send to B2
-2. Set the OP_RETURN to the new DID Description
-3. Sign tx with S1 (P1 is revealed)
-
-<img src="diagrams/BSV-tx-ref.png" alt="BSV Transaction Structure">
 
 
 Deleting a DID {#deleting}
 --------------
 
-A BSV DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BSV DID chain.
 
-An entity updates the BSV DID Description by spending the current transaction output. The BSV Transaction Structure diagram shows how that is done in this second transaction.
-
-1. Create new tx like above, but send to B2
-2. Omit the OP_RETURN
-3. Sign tx with S1 (P1 is revealed)
 
 Versioning {#versioning}
 ==========
