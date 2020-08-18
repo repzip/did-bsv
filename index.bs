@@ -1,45 +1,42 @@
 <pre class='metadata'>
-Title: BTCR DID Method
-Shortname: didm-btcr
+Title: BSV DID Method
+Shortname: did-BSV
 Level: 1
 Status: w3c/CG-DRAFT
 Group: Credentials Community Group
-URL: https://w3c-ccg.github.io/didm-btcr/
+URL: https://repzip.github.io/did-BSV/
 
-Editor: Christopher Allen, http://www.lifewithalacrity.com/
-Editor: Kim Hamilton Duffy, https://github.com/kimdhamilton
-Editor: Ryan Grant
-Editor: Dan Pape, https://github.com/danpape
+Editor: William Devine, https://www.repzip.com/
 
-Abstract: The Bitcoin Reference DID method specification conforms to the requirements specified in the <a href="https://w3c-ccg.github.io/did-spec/">DID specification</a> currently published by the W3C Credentials Community Group. For more information about DIDs and DID method specifications, please see the <a href="https://github.com/WebOfTrustInfo/rwot7/blob/master/topics-and-advance-readings/did-primer.md">DID Primer</a>.
+
+Abstract: The BSV DID method specification conforms to the requirements specified in the <a href="https://w3c-ccg.github.io/did-spec/">DID specification</a> currently published by the W3C Credentials Community Group. For more information about DIDs and DID method specifications, please see the <a href="https://github.com/WebOfTrustInfo/rwot7/blob/master/topics-and-advance-readings/did-primer.md">DID Primer</a>.
 
 </pre>
 
 Introduction {#intro}
 =====================
 
-The Bitcoin Reference DID method (did:btcr) supports DIDs on the public
-Bitcoin [=blockchain=]. The Bitcoin Reference method has minimal design
-goals: a DID trust anchor based on the Bitcoin blockchain, updates
+The BitcoinSV DID method (did:bsv) supports DIDs on the public
+BitcoinSV [=blockchain=] (BSV). The BSV method has minimal design
+goals: a DID trust anchor based on the BitcoinSV blockchain, updates
 publicly visible and auditable via Bitcoin transactions, and optionally,
 additional DID Document information referenced in the transaction
-OP_RETURN data field. No other Personal Identifiable Information (PII)
-would be placed on the immutable blockchain.
+OP_RETURN data field. No Personal Identifiable Information (PII)
+needs to be placed on the immutable blockchain so the system can allow 
+for private usage out of the box. 
 
-A secondary intent of the BTCR method is to serve as a very
-conservative, very secure example and some best practices for creating a
-DID method. The use cases for BTCR are focused on anonymous and
-pseudo-anonymous identities, web-of-trust style webs of identity, and
-absolute mimimal personal information disclosure. Other DID methods will
-likely need to loosen these standards.
+The BSV DID Methodology allows for pseudo-anonymous identities, web-of-trust style webs of identity, and
+absolute mimimal personal information disclosure. 
 
-Some aspects of the BTCR method will not be practical if inappropriately
-scaled — for instance, there is a transaction cost to update keys and
-DDO object, potential UTXO inflation (i.e. one additional unspent output
-for every BTCR-based identity), and even if segwit isn't used it could
-cause blockchain bloat. However, identities using the BTCR method can be
-a strong as Bitcoin itself -- currently securing billions of dollars of
-digital value.
+It also allows for users to publicly link PII to certain DID:BSV identifiers as a public profile. 
+Allowing users to develop public identifiers and thereby creating public reputations. We foresee 
+users controlling multiple DID:BSV Identities within the same Wallet System. Some public, some private.
+
+The system is flexible and has been designed to adhere to the Law. 
+
+The DID:BSV documents are designed to be portable and easy to verify. We utilize the SPV methodology 
+proposed in the Bitcoin Whitepaper to accomplish that task.
+
 
 Terminology {#terminology}
 ===========
@@ -72,84 +69,89 @@ should be excavated.
 [=consensus algorithm=] that enables a network of ledger nodes to come
 to consensus in a decentralized yet deterministic fashion.
 
-<dfn>ledger</dfn>: TODO.
+<dfn>SPV</dfn>: Simple Payment Verification, as covered by the Bitcoin Whitepaper.
+
+<dfn>Metanet</dfn>: <a href="https://nchain.com/app/uploads/2019/06/The-Metanet-Technical-Summary-v1.0.pdf"> Metanet Specification Document</a>
+
+<dfn>HD Wallet</dfn>: TODO.
 
 <dfn>outpoint</dfn>: [=outpoint index=].
 
 <dfn>outpoint index</dfn>: A bitcoin transaction output. Also called outpoint (without index). 
 This terminology is chosen for consistency with <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">BIP-136</a>.
 
+
+
 Basic Concepts {#concepts}
 ==============
 
-Txref {#txref}
+SPV Proof {#SPV}
 --------------
 
-BTCR identifiers use the TxRef encoding to refer to a transaction position within the Bitcoin blockchain, as described in BIP-0136, <a href="https://github.com/bitcoin/bips/blob/master/bip-0136.mediawiki">Bech32 Encoded Transaction Position References</a>. A TxRef encodes the chain, blockheight, and transaction index where the transaction is located, and an optional reference to the [=outpoint index=] within the transaction.
-
-Because the TxRef encodes the transaction's position in the Bitcoin blockchain, that means it is only known after a transaction has been confirmed. That distinguishes it from, for example, transaction ids (hashes), which are known even before confirmation.
-
-Modifications to BIP-0136:
-
-1. The BTCR Method Specification has chosen to elide chain-specific prefixes (e.g. tx1 or txtest1), as permitted by BIP-0136.
+DID:BSV identifiers use the Public Key (Base 58) to refer to the , 
 
 
-<div class="example" heading="TxRef (without outpoint index)"> txid
-67c0ee676221d9e0e08b98a55a8bf8add9cba854f13dda393e38ffa1b982b833 is on
-the testnet3 chain, at blockheight 1201739, transaction position 2. Its
-TxRef is <pre>xkyt-fzzq-q4wq-f2d</pre></div>
 
 
-<div class="example" heading="TxRef (with outpoint index)"> txid
-67c0ee676221d9e0e08b98a55a8bf8add9cba854f13dda393e38ffa1b982b833 is on
-the testnet3 chain, at blockheight 1201739, transaction position 2 and
-we want to specify the second transaction [=outpoint index=] (index 1). Its TxRef is
-<pre>8kyt-fzzq-qpqq-ljsc-5l</pre></div>
-
-2. The BTCR Method Specification does not allow ambiguity that arises when the transaction [=outpoint index=] is 0
-
-In the case where a BTCR-related transaction specifies an [=outpoint index=], and that [=outpoint index=] is 0, the short form of the BTCR DID must be used.
-
-<div class="example" heading="BTCR Transaction outpoint index 0 ambiguity example">
-For testnet transaction <pre>f8cdaff3ebd9e862ed5885f8975489090595abe1470397f79780ead1c7528107</pre>, if referring to outpoint index 0, the BTCR DID must be resolved as follows:
-
-VALID: <pre>did:btcr:xyv2-xzpq-q9wa-p7t</pre>
-INVALID: <pre>did:btcr:8yv2-xzpq-qqqq-9yce-nk</pre>
-</div>
+1. The BSV Method Specification has chosen to use the Public Key in Base58 encoding as the unique identifier for each DID document. 
 
 
-BIP136 supports both forms for index 0, but we are making the decision that BTCR supports only the short form when index==0. This is for the following reasons:
-- clarity for resolution implementers
-- ambiguous id is a potential security issue
-
-If a DID resolver encounters the invalid form, it must reject the input as invalid.
 
 
-BTCR DID Format {#format}
+2. The BSV Method Specification uses the Metanet specifications with regards to formating the transactions.
+
+
+
+Structuring DID transactions to be interpreted as Metanet nodes, and
+using digital signatures to create edges as links between them. This allows a graph to be
+reconstructed off-chain, by anybody, using on-chain data and a standardised protocol.
+This graph then allows on-chain data to be usefully related, handled and distributed by network peers
+in an internet-like model where trust is decentralised, transparency increased, and data integrity,
+authenticity and validity secured by the Blockchain and proof-of-work mining.
+
+
+
+
+
+
+
+BSV DID Format {#format}
 ---------------
 
-BTCR DIDs have the following format:
+BSV DIDs have the following format:
 
 <pre>
-      btcr-did        = "did:btcr:" btcr-identifier
+      BSV-did        = "did:bsv:" BSV-identifier
                        [ ";" did-service ] [ "/" did-path ]
                        [ "?" did-query ] [ "#" did-fragment ]
-      btcr-identifier = TxRef encoded transaction id
+      BSV-identifier = Base 58 Public Key
 </pre>
 
-<div class="example" heading="BTCR DID"> A BTCR DID for txid
-67c0ee676221d9e0e08b98a55a8bf8add9cba854f13dda393e38ffa1b982b833, on the
-testnet3 chain, at blockheight 1201739, transaction position 2 and tx
-[=outpoint index=] 1 is <pre>did:btcr:8kyt-fzzq-qpqq-ljsc-5l</pre></div>
 
-BTCR DID construction {#btcr_construction}
+BSV DID construction {#BSV_construction}
 ---------------------
-BTCR DID transactions can be constructed in two ways: with or without an OP_RETURN field. If the transaction does not have an OP_RETURN field, it is granted default capabilities constructed from the transaction itself, resulting in a generated DID document. Otherwise, its capabilities are determined by the DID document (called continuation document) referenced in the OP_RETURN field.
+
+𝑇𝑥𝐼𝐷𝑛𝑜𝑑𝑒
+Inputs Outputs
+< 𝑆𝑖𝑔 𝑃𝑝𝑎𝑟𝑒𝑛𝑡> <𝑃𝑝𝑎𝑟𝑒𝑛𝑡> OP_RETURN <Metanet Flag> <𝑃𝑛𝑜𝑑𝑒> <𝑇𝑥𝐼𝐷𝑝𝑎𝑟𝑒𝑛𝑡> 
+
+
+You should familiarise yourself with the concept of the Metanet and how the graph is constructed.
+
+VOUT - 0 
+
+OP_FALSE OP_RETURN 'meta' (or possibly 'did' tbd) Pubkey (Parent Tx - If not a Root DID) 
+
+VOUT - 1
+
+OP_PUSHDATA 'DID DOC' OP_DROP
+
+
 
 
 Default Capabilities {#default_cap}
 --------------------
-If an (unspent) BTCR DID's transaction does not contain an OP_RETURN field, a DID resolver must generate the DID Document from the transaction itself. Specifically, it grants the transaction signing key the following capabilities:
+If an BSV DID's transaction does not contain an OP_RETURN field, a DID resolver must generate the DID Document from the transaction itself. Specifically, it grants the transaction signing key the following capabilities:
 
 1. Authentication
 2. Sign Verifiable Credentials
@@ -158,39 +160,41 @@ If an (unspent) BTCR DID's transaction does not contain an OP_RETURN field, a DI
 <div class="example" heading="Detailed example of default capabilities">
 <pre>
 {
-    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/btcr/v1"],
-    "id": "did:btcr:xyv2-xzpq-q9wa-p7t",
-    "publicKey": [
-       {
-            "id": "did:btcr:xyv2-xzpq-q9wa-p7t#satoshi",
-            "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
-            "type": "EcdsaSecp256k1VerificationKey2019",
-            "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
-        },
-        {
-             "id": "did:btcr:xyv2-xzpq-q9wa-p7t#vckey-0",
-             "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
-             "type": "EcdsaSecp256k1VerificationKey2019",
-             "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
-         }
-    ],
-    "authentication": ["#satoshi"],
-    "assertionMethod": ["#vckey-0"]
+	"@context": "https://www.w3.org/ns/did/v1",
+	"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+	"authentication": [
+		{
+			"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"type": "Secp256k1VerificationKey2018",
+			"controller": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"publicKeyHex": "035d69e411576a93b20de3e3b834acfcd5de8be8875e74ab38d2f8109bf5f3f0ac"
+		}
+	],
+	"service": [
+		{
+			"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"type": "VerifiableCredentialService",
+			"serviceEndpoint": "https://identity.law/vc/"
+		}
+	],
+	"created": 1597518133664,
+	"updated": 1597518133664,
+	"proofs": []
 }
 </pre>
 </div>
 
-We will see in the following sections that this option of BTCR DID construction is only possible for the first transaction in a BTCR transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.
+We will see in the following sections that this option of BSV DID construction is only possible for the first transaction in a BSV transaction chain; i.e. all subsequent transactions must use an OP_RETURN, or the DID is considered revoked or deleted.
 
 
 Continuation DID Documents {#continuation}
 --------------------------
 
-If an (unspent) BTCR DID's transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.
+If an BSV DID's transaction contains an OP_RETURN field, the OP_RETURN field must contain an HTTP URL pointing to a DID document (specifying the key material, capabilities, and service endpoints). Note that the default capabilities described above are not granted; a DID resolver must return the referenced DID document as is.
 
-With this construction, the DID document referenced by the transaction must be updated after  confirmation with the BTCR DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.
+With this construction, the DID document referenced by the transaction must be updated after confirmation with the BSV DID (which is known only after the tx is confirmed) and signed with the transaction signing key with a timestamp.
 
-The OP_RETURN field may be used in the first transaction in a BTCR chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion. 
+The OP_RETURN field may be used in the first transaction in a BSV chain, and must be used for all subsequent transactions in the chain, up to the point of revocation or deletion. 
 
 Note: If the OP_RETURN exists, the continuation DID document obviates the need for additional implicit capabilities; we assume each capability is listed explicitly in the continuation DID document.
 
@@ -208,9 +212,9 @@ DO
 WHILE (current transaction Outpoint is spent OR OP_RETURN field is missing)
 </pre>
 
-If the latest transaction in the chain has no OP_RETURN, a BTCR DID is considered deleted (revoked).
+If the latest transaction in the chain has no OP_RETURN, a BSV DID is considered deleted (revoked).
 
-Otherwise, the BTCR DID is not revoked, and the latest transaction in the chain should be used by the resolver.
+Otherwise, the BSV DID is not revoked, and the latest transaction in the chain should be used by the resolver.
 
 Operations {#operations}
 ==========
@@ -218,7 +222,7 @@ Operations {#operations}
 Creating a DID {#creating}
 --------------
 
-A BTCR DID is created by creating a Bitcoin transaction with an optional
+A BSV DID is created by creating a Bitcoin transaction with an optional
 OP_RETURN data field referring to additional DID document material, as
 described in this section.
 
@@ -227,51 +231,51 @@ Abbreviations:
 * Pi = public key i
 * Si = signing key i (or private key i)
 
-Creating the initial BTCR DID:
+Creating the initial BSV DID:
 1. Create key set (B0/P0/S0)
 2. Create key set (B1/P1/S1)
 3. Create Bitcoin transaction:
     1. Output: Change address B1
     2. Optional output: OP_RETURN <link to DDO continuation>
     3. Signing key is S0, which reveals public key P0 in the transaction
-4. Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-btcr/issues/7">didm-btcr issue 7</a>
+4. Issue TX0 and wait for confirmation. <a href="https://github.com/w3c-ccg/didm-BSV/issues/7">didm-BSV issue 7</a>
 5. Get TX Ref encoding of the confirmed transaction TxRef(TX0)
 
-At this point we have a DID of the format did:btcr:TxRef(TX0). 
+At this point we have a DID of the format did:bsv:TxRef(TX0). 
 
 Reading a DID {#reading}
 -------------
 
-1. Extract the transaction references from the BTCR DID (i.e. did:btcr:TxRef(TX0))
-2. Look up transaction. Is the [=outpoint index=] spent?
+1. Extract the Public Key from the BSV DID (i.e. did:bsv:TxRef(TX0))
+2. Look up the Metanet Graph for the latest corresponding Transaction.
     * no: this is the latest version of the DID. From this we can construct the DID Description (described below)
     * yes: keep following transaction chain until the latest with an unspent [=outpoint=] is found
 
 See <a
 href="https://github.com/WebOfTrustInfo/rebooting-the-web-of-trust-spring2018/pull/74">
-BTCR resolver</a> for additional details. TODO: merge in
+BSV resolver</a> for additional details. TODO: merge in
 
 
 Updating a DID {#updating}
 --------------
 
-An entity updates the BTCR DID Description by spending the current
-transaction [=outpoint=]. The BTCR Transaction Structure diagram shows how
+An entity updates the BSV DID Description by spending the current
+transaction [=outpoint=]. The BSV Transaction Structure diagram shows how
 that is done in this second transaction.
 
 1. Create new tx like above, but send to B2
 2. Set the OP_RETURN to the new DID Description
 3. Sign tx with S1 (P1 is revealed)
 
-<img src="diagrams/btcr-tx-ref.png" alt="BTCR Transaction Structure">
+<img src="diagrams/BSV-tx-ref.png" alt="BSV Transaction Structure">
 
 
 Deleting a DID {#deleting}
 --------------
 
-A BTCR DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BTCR DID chain.
+A BSV DID is considered deleted (or revoked) if the latest transaction has no OP_RETURN and there is more than one transaction in the BSV DID chain.
 
-An entity updates the BTCR DID Description by spending the current transaction output. The BTCR Transaction Structure diagram shows how that is done in this second transaction.
+An entity updates the BSV DID Description by spending the current transaction output. The BSV Transaction Structure diagram shows how that is done in this second transaction.
 
 1. Create new tx like above, but send to B2
 2. Omit the OP_RETURN
@@ -349,8 +353,6 @@ Key Revocation and Recovery
 Privacy Considerations
 ======================
 
-Keep Personally-Identifiable Information (PII) Off-Ledger
----------------------------------------------------------
 
 DDO Correlation Risks
 ---------------------
@@ -361,39 +363,62 @@ Herd Privacy
 Appendix A: Examples
 ====================
 
-Typical DID Document
+Typical Full DID Document
 --------------------
 
-The following is a complete example of a typical BTCR DID Document:
+The following is a complete example of a typical BSV DID Document with MetanetSPV Proof:
 
-<div class="example" heading="Typical BTCR DID Document">
+<div class="example" heading="Typical BSV DID Document">
 <pre>
 
 {
-    "@context": ["https://w3id.org/did/v0.11", "https://w3id.org/btcr/v1"],
-    "id": "did:btcr:xyv2-xzpq-q9wa-p7t",
-    "publicKey": [
-       {
-            "id": "did:btcr:xyv2-xzpq-q9wa-p7t#satoshi",
-            "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
-            "type": "EcdsaSecp256k1VerificationKey2019",
-            "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
-        },
-        {
-             "id": "did:btcr:xyv2-xzpq-q9wa-p7t#vckey-0",
-             "controller": "did:btcr:xyv2-xzpq-q9wa-p7t",
-             "type": "EcdsaSecp256k1VerificationKey2019",
-             "publicKeyBase58": "owh12LKNuphe97teJTZKQTKNewSVTwjHcskPbq34epCY"
-         }
-    ],
-    "authentication": ["#satoshi"],
-    "assertionMethod": ["#vckey-0"],
-    "service":
-      {
-        "id": "did:btcr:xyv2-xzpq-q9wa-p7t#CRS",
-        "type": "BTCR-CredentialRepositoryService",
-      "serviceEndpoint": "https://github.com/ChristopherA/self/blob/master/ddo.jsonld?hl=z87f623hkjh578v76dsf873h"
-      },
+	"@context": "https://www.w3.org/ns/did/v1",
+	"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+	"authentication": [
+		{
+			"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"type": "Secp256k1VerificationKey2018",
+			"controller": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"publicKeyHex": "035d69e411576a93b20de3e3b834acfcd5de8be8875e74ab38d2f8109bf5f3f0ac"
+		}
+	],
+	"service": [
+		{
+			"id": "did:bsv:zybgLWJTotnpmWxgaySoUFw6dcz1DX7W8uAY2j7LpaSP",
+			"type": "VerifiableCredentialService",
+			"serviceEndpoint": "https://identity.law/vc/"
+		}
+	],
+	"created": 1597518133664,
+	"updated": 1597518133664,
+	"proofs": [
+		{
+			"type": "MetanetSPV",
+			"proofPurpose": "assertionMethod",
+			"created": 1597521445449,
+			"txid": "32af205fb3e95b57e004a10f90fb67991c4809e35c0c5c8911e694f5ebe02634",
+			"rawtx": "0100000001a1e99e35e19c46b823e56e100a49bc06bac6a032cf840927cad6706b2e9db758020000006b4830450221009a90fdd61ed901ed84c4bf94e157874026c140b1008bec00aa3204a0e4b57534022064558a1f3bf2967ea3a95de415586479f487ce33296826672501945e37be75b24121035d69e411576a93b20de3e3b834acfcd5de8be8875e74ab38d2f8109bf5f3f0acffffffff0300000000000000008b006a046d657461423033356436396534313135373661393362323064653365336238333461636663643564653862653838373565373461623338643266383130396266356633663061634035386237396432653662373064366361323730393834636633326130633662613036626334393061313036656535323362383436396365313335396565396131b80b000000000000fd5f024d42027b2240636f6e74657874223a2268747470733a2f2f7777772e77332e6f72672f6e732f6469642f7631222c226964223a226469643a6273763a7a7962674c574a546f746e706d5778676179536f5546773664637a314458375738754159326a374c70615350222c2261757468656e7469636174696f6e223a5b7b226964223a226469643a6273763a7a7962674c574a546f746e706d5778676179536f5546773664637a314458375738754159326a374c70615350222c2274797065223a22536563703235366b31566572696669636174696f6e4b657932303138222c22636f6e74726f6c6c6572223a226469643a6273763a7a7962674c574a546f746e706d5778676179536f5546773664637a314458375738754159326a374c70615350222c227075626c69634b6579486578223a22303335643639653431313537366139336232306465336533623833346163666364356465386265383837356537346162333864326638313039626635663366306163227d5d2c2273657276696365223a5b7b226964223a226469643a6273763a7a7962674c574a546f746e706d5778676179536f5546773664637a314458375738754159326a374c70615350222c2274797065223a2256657269666961626c6543726564656e7469616c53657276696365222c2273657276696365456e64706f696e74223a2268747470733a2f2f6964656e746974792e6c61772f76632f227d5d2c2263726561746564223a313539373531383133333636342c2275706461746564223a313539373531383133333636347d7576a914dfa51c199a4adbbf822dd3767730786688b8ab1e88ac39710000000000001976a914dfa51c199a4adbbf822dd3767730786688b8ab1e88ac00000000",
+			"blockHash": "000000000000000001895ecb29fab985c61a9bd08cd84f0f9fdab61a545b8f8f",
+			"merkleRoot": "b66b55b6409dd54ecc861e35423bd51aee538cf145436d2ed29417bdb4001e0d",
+			"branches": [
+				{	"hash": "bd7c70297b25dab2424e5f84d5ff3b7db6a7eaa1515c1adbd76b60863fe18cdd",	"pos": "L"},
+				{   "hash": "ba3820fc6e32f091f7028eccbdb307ae1d017f0f5193f80d4d7684de45974c87", "pos": "L"},
+				{   "hash": "00f70b19c41569e481d24486b1f278c2f90c9ee84a05c9dc7b30a288642577be", "pos": "L"},
+				{	"hash": "cdeb1a318b9d85a99cc608697855b3fb14f1dd2cd49c89f7ab9692adba35f6a1", "pos": "R"},
+				{  	"hash": "06c8ba6fdb70862e5e13f10c8e788e47a360941e7da062b2233c8ae76e8dab43",	"pos": "R"},
+				{ 	"hash": "57f107d7b4e7ebe7750d1c8dfba3f060ff40090dd668affe24e9213833cce3b4",	"pos": "R"},
+				{   "hash": "a2bad9a38314bb3c46cf221ae0ab46c5e83b26f556c10d5f435c79dfe491b656", "pos": "R"},
+				{   "hash": "9f8a3f338eaad8d64db79d049951afb2fbab58d727fe67891acf5b09d66aeaa4",	"pos": "L"},
+				{   "hash": "7133e791be45f25b4fcbc9d9ae209c97efc75ab3cc088efe40cb85a5c3b24991",	"pos": "L"},
+				{   "hash": "bfe2577630cdb0d9e6948f82f4f973c8097c15ca93aa5f24b9be7706935b5a00",	"pos": "R"},
+				{	"hash": "17277c2ccc02302729ca6300757011efa58340eefb957a8bd242c8f3fa17a8a3", "pos": "L"},
+				{	"hash": "2a991de8f72a2b5c99c258d74ab2872a5712f508ca71c71933dece4ed90a39a5",	"pos": "L"},
+				{    "hash": "dd31fc98dc3397c269c9cfc986ec2e75226af83e31cfe0efa428929a0d881f20","pos": "L"},
+				{   "hash": "b7af0f37b29057689612f5064347ef4ea367b4364152306d310d6aa0bea27d78",	"pos": "L"},
+				{	"hash": "181a10670ac0bc850bbdfbad6aac0a3652a7ed0e9494ac6a07fbaa86d929ad29",	"pos": "L"}
+			]
+		}
+	]
 }
 
 </pre>

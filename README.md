@@ -18,7 +18,7 @@ pip install pygments lxml --upgrade
 
 Run:
 ```
-python bikeshed.py spec ../didm-btcr/index.bs
+python bikeshed.py spec ../did-bsv/index.bs
 ```
 
 ## BTCR Resources
