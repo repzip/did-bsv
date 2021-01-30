@@ -1,4 +1,4 @@
-# didm-btcr
+# didm-bsv
 BSV DID Method Spec
 
 ## Running bikeshed
@@ -21,6 +21,6 @@ Run:
 python bikeshed.py spec ../did-bsv/index.bs
 ```
 
-## BTCR Resources
 
-[resources.md](resources.md)
+
+
